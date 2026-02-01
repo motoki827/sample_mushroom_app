@@ -2,10 +2,18 @@
 import torch
 from torchvision import models, transforms
 from PIL import Image
+import torch.nn as nn
 
 net = models.resnet101(pretrained=True)  # 訓練済みのモデルを読み込み
-with open("imagenet_classes.txt") as f:  # ラベルの読み込み
+with open("mushroom_classes.txt") as f:  # ラベルの読み込み
     classes = [line.strip() for line in f.readlines()]
+
+# 出力層を学習時と同じクラス数に変更
+net.fc = nn.Linear(net.fc.in_features, len(classes))
+
+# 学習済みのバラメータを反映
+state_dict = torch.load("model.pth")
+net.load_state_dict(state_dict)
 
 def predict(img):
     # 以下の設定はこちらを参考に設定: https://pytorch.org/hub/pytorch_vision_resnet/
