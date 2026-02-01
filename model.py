@@ -12,7 +12,7 @@ with open("mushroom_classes.txt") as f:  # ラベルの読み込み
 net.fc = nn.Linear(net.fc.in_features, len(classes))
 
 # 学習済みのバラメータを反映
-state_dict = torch.load("model.pth")
+state_dict = torch.load("model.pth", map_location=torch.device("cpu"))
 net.load_state_dict(state_dict)
 
 def predict(img):
